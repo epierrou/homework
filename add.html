@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lägg till glosor</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    label { display: block; font-weight: 800; margin: 14px 0 4px; }
+    input, textarea { width: 100%; font: inherit; padding: 10px; border: 2px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); }
+    textarea { min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .95rem; }
+    pre { background: #23213a; color: #e8e6ff; padding: 14px; border-radius: 12px; overflow: auto; font-size: .85rem; white-space: pre-wrap; }
+    .box { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; margin: 14px 0; }
+    ol li { margin: 6px 0; }
+    code { background: #eceaff; padding: 1px 5px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+<main id="app">
+  <header class="topbar">
+    <a class="back" href="index.html">← Till sajten</a>
+    <h1>➕ Lägg till glosor</h1>
+    <span></span>
+  </header>
+
+  <div class="box">
+    <label for="title">Rubrik</label>
+    <input id="title" value="Vecka 49">
+    <label for="due">Datum för förhöret</label>
+    <input id="due" type="date">
+    <label for="note">Meddelande från läraren (valfritt)</label>
+    <input id="note" placeholder="Veckans glosor – tänk på att…">
+    <label for="words">Glosor – en per rad: <code>svenska - engelska</code></label>
+    <p class="muted">Vill du ha exempelmeningar? Lägg till dem efter ett <code>|</code> och sätt
+      [hakparenteser] runt ordet. Exempel:<br>
+      <code>socker - sugar | Add some [sugar]. | I like [sugar].</code></p>
+    <textarea id="words" placeholder="läcker - delicious&#10;socker - sugar | Add two cups of [sugar]."></textarea>
+  </div>
+
+  <div class="box">
+    <h2>Kod att klistra in</h2>
+    <pre id="out"></pre>
+    <div class="row"><button class="btn primary" id="copy">📋 Kopiera koden</button></div>
+    <h2>Så här gör du</h2>
+    <ol>
+      <li>Kopiera koden ovan.</li>
+      <li>Öppna filen <code>data/words.js</code> i repot på GitHub och tryck på pennan (Edit).</li>
+      <li>Klistra in koden direkt efter raden <code>const WEEKS = [</code>.</li>
+      <li>Tryck på <strong>Commit changes</strong>. Efter någon minut finns veckan på sajten.</li>
+    </ol>
+    <p class="muted">Tips: Utan exempelmeningar fungerar allt utom Lucktext och Bygg meningen. Du kan också be Claude
+      skriva meningar åt dig utifrån en skärmdump på glosorna.</p>
+  </div>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const isoWeek = (d) => {
+    const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const day = t.getUTCDay() || 7;
+    t.setUTCDate(t.getUTCDate() + 4 - day);
+    return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+  };
+  // Default: next Monday
+  const next = new Date();
+  next.setDate(next.getDate() + ((8 - next.getDay()) % 7 || 7));
+  $("due").value = next.toISOString().slice(0, 10);
+  $("title").value = "Vecka " + isoWeek(next);
+
+  const q = (s) => JSON.stringify(s.trim());
+  function generate() {
+    const due = $("due").value;
+    const wk = due ? isoWeek(new Date(due + "T12:00:00")) : "x";
+    const id = (due ? due.slice(0, 4) : "ny") + "-v" + wk;
+    const lines = $("words").value.split("\n").map((l) => l.trim()).filter(Boolean);
+    const words = lines.map((line) => {
+      const [pair, ...sentences] = line.split("|");
+      const m = pair.split(/\s+[-–—=]\s+|\t|\s*=\s*/);
+      const sv = (m[0] || "").trim(), en = (m.slice(1).join(" ") || "").trim();
+      if (!sv || !en) return `      // KUNDE INTE LÄSA: ${line}`;
+      const s = sentences.map((x) => x.trim()).filter(Boolean);
+      return s.length
+        ? `      { sv: ${q(sv)}, en: ${q(en)}, sentences: [\n${s.map((x) => `        ${q(x)},`).join("\n")}\n      ]},`
+        : `      { sv: ${q(sv)}, en: ${q(en)}, sentences: [] },`;
+    });
+    $("out").textContent =
+`  {
+    id: ${q(id)},
+    title: ${q($("title").value)},
+    due: ${q(due)},
+    note: ${q($("note").value)},
+    words: [
+${words.join("\n")}
+    ],
+  },`;
+  }
+  ["title", "due", "note", "words"].forEach((id) => $(id).addEventListener("input", generate));
+  generate();
+  $("copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("out").textContent); $("copy").textContent = "✅ Kopierat!"; }
+    catch { $("copy").textContent = "Markera och kopiera manuellt"; }
+    setTimeout(() => ($("copy").textContent = "📋 Kopiera koden"), 2000);
+  });
+</script>
+</body>
+</html>
