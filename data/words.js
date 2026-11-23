@@ -19,6 +19,74 @@
  */
 const WEEKS = [
   {
+    id: "2026-v49",
+    title: "Vecka 49 – Food & school lunch",
+    due: "2026-11-30",
+    note: "Förhör mån 30/11 – tänk på att du ska kunna skriva in orden i meningar.",
+    words: [
+      { sv: "förmodligen", en: "probably", sentences: [
+        "It will [probably] rain tomorrow.",
+        "We will [probably] have pizza for dinner.",
+      ]},
+      { sv: "måltid", en: "meal", sentences: [
+        "Breakfast is my favourite [meal].",
+        "We eat a warm [meal] at school every day.",
+      ]},
+      { sv: "nyttig", en: "healthy", sentences: [
+        "Fruit is [healthy] food.",
+        "It is [healthy] to drink a lot of water.",
+      ]},
+      { sv: "ris", en: "rice", sentences: [
+        "We eat [rice] with chicken.",
+        "[Rice] is popular in many countries.",
+      ]},
+      { sv: "tunnbröd", en: "flatbread", sentences: [
+        "I like [flatbread] with butter and cheese.",
+        "Dad makes a hot dog roll with [flatbread].",
+      ]},
+      { sv: "vete", en: "wheat", sentences: [
+        "Bread is made from [wheat].",
+        "The farmer grows [wheat] on the big field.",
+      ]},
+      { sv: "majs", en: "corn", sentences: [
+        "We eat [corn] with butter.",
+        "[Corn] is yellow and sweet.",
+      ]},
+      { sv: "onyttig", en: "unhealthy", sentences: [
+        "Too much candy is [unhealthy].",
+        "Chips are [unhealthy] but very tasty.",
+      ]},
+      { sv: "ändra", en: "change", sentences: [
+        "The school wants to [change] the lunch menu.",
+        "Can we [change] places, please?",
+      ]},
+      { sv: "för dyrt", en: "too expensive", sentences: [
+        "This jacket is [too expensive] for me.",
+        "We can't buy the game, it is [too expensive].",
+      ]},
+      { sv: "mattor", en: "mats", sentences: [
+        "Wipe your shoes on the [mats].",
+        "We put [mats] on the floor in the gym.",
+      ]},
+      { sv: "golv", en: "floor", sentences: [
+        "Don't drop food on the [floor].",
+        "The [floor] in the hall is wet.",
+      ]},
+      { sv: "skolmatsal", en: "school cafeteria", sentences: [
+        "We eat lunch in the [school cafeteria].",
+        "The [school cafeteria] is very noisy today.",
+      ]},
+      { sv: "grönsaker", en: "vegetables", sentences: [
+        "Eat your [vegetables], please!",
+        "Carrots and peas are [vegetables].",
+      ]},
+      { sv: "köpa", en: "buy", sentences: [
+        "I want to [buy] new shoes.",
+        "Mum goes to the shop to [buy] milk.",
+      ]},
+    ],
+  },
+  {
     id: "2026-v48",
     title: "Vecka 48 – Let's bake!",
     due: "2026-11-23",
